@@ -17,13 +17,25 @@ app.use(express.json())
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.z240d.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect(err => {
-    const carsCollection = client.db("car-paradise").collection("car");
-    console.log('Car Paradise server is connected to db.')
-    // perform actions on the collection object
-    client.close();
-});
 
+async function run() {
+    try {
+        await client.connect()
+        const carsCollection = client.db("car-paradise").collection("car");
+
+        //getting all the cars data from db
+        app.get('/cars', async (req, res) => {
+            const query = {}
+            const cursor = carsCollection.find(query)
+            const cars = await cursor.toArray()
+            res.send(cars)
+        })
+    }
+    finally {
+
+    }
+}
+run().catch(console.dir)
 
 //root api
 app.get('/', async (req, res) => {
