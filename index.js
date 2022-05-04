@@ -49,6 +49,23 @@ async function run() {
             const result = await carsCollection.deleteOne(query)
             res.send(result)
         })
+
+        //updating car quantity
+        app.put('/inventory/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedCar = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    quantity: updatedCar.quantity,
+
+                }
+            };
+            const result = await carsCollection.updateOne(filter, updatedDoc, options);
+            res.send(result);
+
+        })
     }
     finally {
 
