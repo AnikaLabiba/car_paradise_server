@@ -17,6 +17,7 @@ async function run() {
     try {
         await client.connect()
         const carsCollection = client.db("car-paradise").collection("car");
+        const ordersCollection = client.db("car-paradise").collection("order");
 
         //getting all the cars data from db
         app.get('/inventory', async (req, res) => {
@@ -65,6 +66,22 @@ async function run() {
             const result = await carsCollection.updateOne(filter, updatedDoc, options);
             res.send(result);
 
+        })
+
+        //post order to db
+        app.post('/order', async (req, res) => {
+            const order = req.body;
+            const result = await ordersCollection.insertOne(order)
+            res.send(result)
+        })
+
+        //getting orders
+        app.get('/order', async (req, res) => {
+            const email = req.query.email
+            const query = { email: email }
+            const cursor = ordersCollection.find(query)
+            const result = await cursor.toArray()
+            res.send(result)
         })
     }
     finally {
