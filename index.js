@@ -75,12 +75,20 @@ async function run() {
             res.send(result)
         })
 
-        //getting orders
+        //getting orders by fillering email 
         app.get('/order', async (req, res) => {
             const email = req.query.email
             const query = { email: email }
             const cursor = ordersCollection.find(query)
             const result = await cursor.toArray()
+            res.send(result)
+        })
+
+        //cancel order
+        app.delete('/order/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await ordersCollection.deleteOne(query)
             res.send(result)
         })
     }
