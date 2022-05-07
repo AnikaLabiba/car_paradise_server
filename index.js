@@ -102,7 +102,7 @@ async function run() {
             res.send(result)
         })
 
-        //getting orders by fillering email 
+        //getting orders by fillering email
         app.get('/order', varifyJWT, async (req, res) => {
             const decodedEmail = req.decoded.email
             const email = req.query.email
