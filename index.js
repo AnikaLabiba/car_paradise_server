@@ -94,31 +94,16 @@ async function run() {
 
         })
 
-        //post order to db
-        app.post('/order', async (req, res) => {
-            const order = req.body;
-            const result = await ordersCollection.insertOne(order)
-            res.send(result)
-        })
-
         //getting orders by fillering email
-        app.get('/order', varifyJWT, async (req, res) => {
+        app.get('/inventory', varifyJWT, async (req, res) => {
             const decodedEmail = req.decoded.email
             const email = req.query.email
             if (email === decodedEmail) {
                 const query = { email: email }
-                const cursor = ordersCollection.find(query)
+                const cursor = carsCollection.find(query)
                 const result = await cursor.toArray()
                 res.send(result)
             }
-        })
-
-        //cancel order
-        app.delete('/order/:id', async (req, res) => {
-            const id = req.params.id
-            const query = { _id: ObjectId(id) }
-            const result = await ordersCollection.deleteOne(query)
-            res.send(result)
         })
     }
     finally {
